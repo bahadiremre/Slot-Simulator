@@ -1,0 +1,38 @@
+﻿@model CountryWithLanguage
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h4>
+    <img src="@Model.Flag" style="height:50px" />
+    @Model.Name-@Model.NativeName
+</h4>
+
+@if (Model.Languages?.Count > 0)
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>
+                    Dil(EN)
+                </th>
+                <th>
+                    Dil(Yerel)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Languages)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.NativeName
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
