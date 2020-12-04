@@ -1,0 +1,41 @@
+﻿@model List<CountryWithLanguage>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (Model?.Count > 0)
+{
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Bayrak</th>
+                <th>Ülke Adı(En)</th>
+                <th>Ülke Adı(Yerel)</th>
+                <th>Diller</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img src="@item.Flag" class="img-flag" /></td>
+                    <td>@item.Name</td>
+                    <td>@item.NativeName</td>
+                    <td>
+                        @if (item.Languages?.Count>0)
+                        {
+                            string strLanguage = "";
+                            @foreach (var lang in item.Languages)
+                            {
+                                strLanguage += lang.Name + "(" + lang.NativeName + ") - ";
+                            }
+                            @strLanguage.Trim(new char[] {'-',' ' });
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
