@@ -24,24 +24,21 @@ namespace BES.Slot.WEBUI.Controllers
         {
             List<CountryWithLanguage> currentCountries;
             string jsonCountries;
+            List<CountryWithLanguage> countries= new List<CountryWithLanguage>();
+
             if (string.IsNullOrEmpty(search))
             {
                 jsonCountries = await GetJsonCountriesFromCacheAsync();
             }
             else
             {
-                jsonCountries = await GetSearchingCountriesFromAPIAsync(search);
-            }
-            List<CountryWithLanguage> countries;
+                jsonCountries = await GetJsonSCountriesFromCacheAsync(search);
+            }            
             if (!string.IsNullOrEmpty(jsonCountries))
             {
                 countries = JsonConvert.DeserializeObject<List<CountryWithLanguage>>(jsonCountries);
             }
-            else
-            {
-                countries = new List<CountryWithLanguage>();
-            }
-            
+
 
             int totalPages = (int)Math.Ceiling((double)countries.Count / 8);
             ViewBag.TotalPages = totalPages;
@@ -54,7 +51,18 @@ namespace BES.Slot.WEBUI.Controllers
             return View(currentCountries);
         }
 
-        private async Task<string> GetSearchingCountriesFromAPIAsync(string search)
+        private async Task<string> GetJsonSCountriesFromCacheAsync(string search)
+        {
+            var cacheSCountries = await _cache.GetOrCreateAsync(search, async entry =>
+            {
+                entry.SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                return await GetSearchingCountriesAsJsonAsync(search);
+            });
+
+            return cacheSCountries;
+        }
+
+        private async Task<string> GetSearchingCountriesAsJsonAsync(string search)
         {
             using var httpClient = new HttpClient();
             var responseMessage = await httpClient.GetAsync(CountriesSearchingURL.Replace("{name}", search.ToUpper()));
