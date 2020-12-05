@@ -5,37 +5,83 @@
 
 @if (Model?.Count > 0)
 {
-    <table class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th>Bayrak</th>
-                <th>Ülke Adı(En)</th>
-                <th>Ülke Adı(Yerel)</th>
-                <th>Diller</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td><img src="@item.Flag" class="img-flag" /></td>
-                    <td>@item.Name</td>
-                    <td>@item.NativeName</td>
-                    <td>
-                        @if (item.Languages?.Count>0)
-                        {
-                            string strLanguage = "";
-                            @foreach (var lang in item.Languages)
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Bayrak</th>
+                        <th>Ülke Adı(En)</th>
+                        <th>Ülke Adı(Yerel)</th>
+                        <th>Diller</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    @*@foreach (var item in Model)*@
+                    {
+                        <tr>
+                            <td>@(i + 1 + ((int)ViewBag.CurrentPage * 8))</td>
+                            <td><img src="@Model[i].Flag" class="img-flag" /></td>
+                            <td>@Model[i].Name</td>
+                            <td>@Model[i].NativeName</td>
+                            <td>
+                                @if (Model[i].Languages?.Count > 0)
+                                {
+                                    string strLanguage = "";
+                                    @foreach (var lang in Model[i].Languages)
+                                    {
+                                        strLanguage += lang.Name + "(" + lang.NativeName + ") - ";
+                                    }
+                                    @strLanguage.Trim(new char[] { '-', ' ' });
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <nav aria-label="Page navigation example">
+                <div class="row">
+                    <div class="col-md-1">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+                        <ul class="pagination flex-wrap">
+                            @for (int i = 0; i < (int)ViewBag.TotalPages; i++)
                             {
-                                strLanguage += lang.Name + "(" + lang.NativeName + ") - ";
+                                <li class="page-item"><a class="page-link" asp-controller="Countries" asp-action="Index" asp-route-curPage="@i">@(i + 1)</a></li>
                             }
-                            @strLanguage.Trim(new char[] {'-',' ' });
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        </ul>
+                    </div>
+                    <div class="col-md-1">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+
 
 
 }
