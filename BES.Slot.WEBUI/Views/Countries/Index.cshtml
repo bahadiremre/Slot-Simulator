@@ -5,7 +5,7 @@
 
 <form class="form-inline" asp-action="Index">
     <div class="form-group mr-2 mb-2">
-        <input class="form-control" name="search" placeholder="Ülke Adı">
+        <input class="form-control" name="search" placeholder="Ülke Adı" value="@ViewBag.SearchingText">
     </div>
     <button type="submit" class="btn btn-primary mb-2">Ara</button>
 </form>
@@ -48,39 +48,19 @@
 </div>
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <nav aria-label="Page navigation example">
             <div class="row">
-                <div class="col-md-1">
-                    <ul class="pagination">
+                <ul class="pagination flex-wrap">
+                    @for (int i = 0; i < (int)ViewBag.TotalPages; i++)
+                    {
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
+                            <a class="page-link" asp-controller="Countries" asp-route-search="@ViewBag.SearchingText"
+                               asp-action="Index" asp-route-curPage="@i">@(i + 1)</a>
                         </li>
-                    </ul>
-                </div>
-                <div class="col-md-9">
-                    <ul class="pagination flex-wrap">
-                        @for (int i = 0; i < (int)ViewBag.TotalPages; i++)
-                        {
-                            <li class="page-item"><a class="page-link" asp-controller="Countries" asp-action="Index" asp-route-curPage="@i">@(i + 1)</a></li>
-                        }
-                    </ul>
-                </div>
-                <div class="col-md-1">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    }
+                </ul>
             </div>
-
         </nav>
     </div>
 </div>

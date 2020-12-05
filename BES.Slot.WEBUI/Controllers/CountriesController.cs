@@ -23,34 +23,33 @@ namespace BES.Slot.WEBUI.Controllers
         public async Task<IActionResult> IndexAsync(int curPage = 0, string search = "")
         {
             List<CountryWithLanguage> currentCountries;
+            string jsonCountries;
             if (string.IsNullOrEmpty(search))
             {
-                string jsonCountries = await GetJsonCountriesFromCacheAsync();
-
-                List<CountryWithLanguage> countries = JsonConvert.DeserializeObject<List<CountryWithLanguage>>(jsonCountries);
-
-                int totalPages = (int)Math.Ceiling((double)countries.Count / 8);
-                ViewBag.TotalPages = totalPages;
-
-                currentCountries = countries.Skip(curPage * 8).Take(8).ToList();
-
-                ViewBag.CurrentPage = curPage;
+                jsonCountries = await GetJsonCountriesFromCacheAsync();
             }
             else
             {
-                ViewBag.CurrentPage = 0;
-                ViewBag.TotalPages = 1;
-                string jsonSCountries = await GetSearchingCountriesFromAPIAsync(search);
-                if (!string.IsNullOrEmpty(jsonSCountries))
-                {
-                    currentCountries = JsonConvert.DeserializeObject<List<CountryWithLanguage>>(jsonSCountries);
-                }
-                else
-                {
-                    currentCountries = new List<CountryWithLanguage>();
-                }
-
+                jsonCountries = await GetSearchingCountriesFromAPIAsync(search);
             }
+            List<CountryWithLanguage> countries;
+            if (!string.IsNullOrEmpty(jsonCountries))
+            {
+                countries = JsonConvert.DeserializeObject<List<CountryWithLanguage>>(jsonCountries);
+            }
+            else
+            {
+                countries = new List<CountryWithLanguage>();
+            }
+            
+
+            int totalPages = (int)Math.Ceiling((double)countries.Count / 8);
+            ViewBag.TotalPages = totalPages;
+
+            currentCountries = countries.Skip(curPage * 8).Take(8).ToList();
+
+            ViewBag.CurrentPage = curPage;
+            ViewBag.SearchingText = search;
 
             return View(currentCountries);
         }
