@@ -13,7 +13,7 @@ namespace BES.Slot.WEBUI.Controllers
     public class CountriesController : Controller
     {
         private readonly string CountriesURL = "https://restcountries.eu/rest/v2/all?fields=name;nativeName;flag;languages";
-        private readonly string CountriesSearchingURL = "https://restcountries.eu/rest/v2/name/{name}?fields=name;nativeName;flag;languages?fields=name";
+        private readonly string CountriesSearchingURL = "https://restcountries.eu/rest/v2/name/{name}?fields=name;nativeName;flag;languages";
         private IMemoryCache _cache;
         public CountriesController(IMemoryCache memoryCache)
         {
